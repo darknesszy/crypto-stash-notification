@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apn-token
+  namespace: crypto-stash
+data:
+  authkey.p8: |
+    -----BEGIN PRIVATE KEY-----
+    -----END PRIVATE KEY-----
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: apn-configs
+  namespace: crypto-stash
+stringData:
+  keyId: t0p-Secret
+  teamId: t0p-Secret
+  appId: t0p-Secret
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+  namespace: crypto-stash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      imagePullSecrets:
+        - name: registry.cn-shenzhen.aliyuncs.com
+      containers:
+        - name: notification
+          image: registry.cn-shenzhen.aliyuncs.com/destinesiastudio/crypto-stash-notification:1.0.0
+          env:
+            - name: API_SERVER
+              value: "http://10.111.131.217:80"
+            - name: EXPECTED_TOTAL
+              value: "4000000"
+            - name: KEY_FILE
+              value: "/token/authkey.p8"
+            - name: KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: apn-configs
+                  key: keyId
+            - name: TEAM_ID
+              valueFrom:
+                secretKeyRef:
+                  name: apn-configs
+                  key: teamId
+            - name: APP_IDENTIFIER
+              valueFrom:
+                secretKeyRef:
+                  name: apn-configs
+                  key: appId
+            - name: EXPECTED_TOTAL
+              value: "4000000"
+          volumeMounts:
+            - name: apn-token
+              mountPath: /token
+      volumes:
+        - name: apn-token
+          configMap:
+            name: apn-token
