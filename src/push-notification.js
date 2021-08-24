@@ -11,7 +11,7 @@ export const notify$ = (status, msg, url) => fromFetch(`${url}/Users/1`).pipe(
             token: {
                 key: process.env['KEY_FILE'],
                 keyId: process.env['KEY_ID'],
-                teamId: process.env['TEAMD_ID']
+                teamId: process.env['TEAM_ID']
             },
             production: false
         }),
