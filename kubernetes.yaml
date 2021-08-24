@@ -41,7 +41,7 @@ spec:
         - name: registry.cn-shenzhen.aliyuncs.com
       containers:
         - name: notification
-          image: registry.cn-shenzhen.aliyuncs.com/destinesiastudio/crypto-stash-notification:1.0.0
+          image: registry.cn-shenzhen.aliyuncs.com/destinesiastudio/crypto-stash-notification:1.0.1
           env:
             - name: API_SERVER
               value: "http://10.111.131.217:80"

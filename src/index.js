@@ -14,8 +14,8 @@ global.AbortController = AbortController
 // Setup environment variables
 !dotenv.config().error && console.log('Using Environment Variables from .env file...')
 
-// 30 minutes
-const alertEpoch = 108000000
+// 1 hour
+const alertEpoch = 3600000
 let lastAlert = undefined
 
 const createReport = status => merge(
