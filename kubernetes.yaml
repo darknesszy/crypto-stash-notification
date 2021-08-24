@@ -64,8 +64,6 @@ spec:
                 secretKeyRef:
                   name: apn-configs
                   key: appId
-            - name: EXPECTED_TOTAL
-              value: "4000000"
           volumeMounts:
             - name: apn-token
               mountPath: /token
