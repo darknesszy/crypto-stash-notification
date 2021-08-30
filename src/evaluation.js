@@ -1,6 +1,6 @@
-// 30 minutes
-const maximumEpoch = 1800000
-const averageRatio = 1.2
+import { minutesToEpoch } from "./utils"
+
+const gracePeriod = 30 // 30 minutes
 let reportedWorkers = []
 let currentEpoch = 0
 export let currentTotal = 0
@@ -32,9 +32,9 @@ const checkHashrate = worker => {
         const reportTime = new Date(worker.hashrates[0].created)
         reportTime.setHours(reportTime.getHours() + 8)
         
-        if(currentEpoch - reportTime.getTime() >= maximumEpoch) {
+        if(currentEpoch - reportTime.getTime() >= minutesToEpoch(gracePeriod)) {
             return workerExists(Status.OLD_REPORT, worker.id)
-        } else if(worker.hashrates[0].reported * averageRatio < worker.hashrates[0].average) {
+        } else if(hashrateLow(worker, 1.3)) {
             return workerExists(Status.REPORTED_LOW, worker.id)
         } else if(reportedWorkers.includes(worker.id)) {
             reportedWorkers.splice(reportedWorkers.indexOf(worker.id))
@@ -51,4 +51,9 @@ const workerExists = (status, id) => {
         return status
     }
     return Status.HEALTHY
+}
+
+const hashrateLow = (worker, modifier) => {
+    return (worker.hashrates[0].reported * modifier < worker.hashrates[0].average)
+    && (worker.hashrates[0].current * modifier < worker.hashrates[0].average)
 }

@@ -6,6 +6,7 @@ import { notify$ } from './push-notification'
 import { switchMap } from 'rxjs/operators'
 import { currentTotal, statusMessage } from './evaluation'
 import { merge, of } from 'rxjs'
+import { minutesToEpoch } from './utils'
 
 // Setup polyfill for rxjs fromFetch
 global.fetch = fetch
@@ -14,8 +15,7 @@ global.AbortController = AbortController
 // Setup environment variables
 !dotenv.config().error && console.log('Using Environment Variables from .env file...')
 
-// 1 hour
-const alertEpoch = 3600000
+const gracePeriod = 60 // 1 hour
 let lastAlert = undefined
 
 const createReport = status => merge(
@@ -33,7 +33,7 @@ statusUpdate$(process.env['API_SERVER'], 60000)
                         notify$(4, `Hashrate has dropped to ${(currentTotal / 1000000000).toFixed(3)} GH/s`, process.env['API_SERVER']),
                         createReport(status)
                     )
-                } else if(new Date().getTime() - lastAlert > alertEpoch) {
+                } else if(new Date().getTime() - lastAlert > minutesToEpoch(gracePeriod)) {
                     return notify$(4, `Hashrate is still abnormal at ${(currentTotal / 1000000000).toFixed(3)} GH/s`, process.env['API_SERVER'])
                 }
             } else {
