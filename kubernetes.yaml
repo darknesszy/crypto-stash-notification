@@ -41,12 +41,12 @@ spec:
         - name: registry.cn-shenzhen.aliyuncs.com
       containers:
         - name: notification
-          image: registry.cn-shenzhen.aliyuncs.com/destinesiastudio/crypto-stash-notification:1.0.1
+          image: registry.cn-shenzhen.aliyuncs.com/destinesiastudio/crypto-stash-notification:1.0.2
           env:
             - name: API_SERVER
-              value: "http://10.111.131.217:80"
+              value: "http://stats-server.crypto-stash.svc.cluster.local:80"
             - name: EXPECTED_TOTAL
-              value: "4000000"
+              value: "400"
             - name: KEY_FILE
               value: "/token/authkey.p8"
             - name: KEY_ID
