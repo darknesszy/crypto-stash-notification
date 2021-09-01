@@ -35,6 +35,7 @@ statusUpdate$(process.env['API_SERVER'], 60000)
                         createReport(status)
                     )
                 } else if(new Date().getTime() - lastAlert > minutesToEpoch(gracePeriod)) {
+                    lastAlert = new Date().getTime()
                     return notify$(4, `Hashrate is still abnormal at ${hashesToGHash(currentTotal).toFixed(3)} GH/s`, process.env['API_SERVER'])
                 }
             } else {

@@ -1,6 +1,6 @@
 {
   "name": "crypto-stash-notification",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "start": "nodemon --watch src --exec ts-node src/index.js",
     "build": "tsc",
